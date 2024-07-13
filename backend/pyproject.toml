@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = ""
+authors = [
+    "Algernon Sampson <algiesampson@gmail.com>", 
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+fastapi = "^0.111.0"
+uvicorn = {version = "^0.30.1", extras = ["standard"]}
+sqlalchemy = {version = "^2.0.31", extras = ["postgresql-asyncpg"]}
+pydantic = "^2.8.0"
+pydantic-settings = "^2.3.4"
+sqlmodel = "^0.0.19"
+
+[tool.poetry.group.prod]
+optional = true
+
+[tool.poetry.group.prod.dependencies]
+gunicorn = "^22.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.1"
+ruff = "^0.5.0"
+pyright = "^1.1.369"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+exclude = ["**/node_modules", "**/__pycache__", "**/.*"]
+typeCheckingMode = "strict"
+
+[tool.ruff.lint.extend-per-file-ignores]
+"api/router/*" = ["ANN201", "TCH001", "TCH002"]  # fastapi needs runtime type checking.
+"api/router/endpoints/*" = ["D103"]  # fastapi has response in the decorator.
+"api/schemas/*" = ["D205", "D400", "TCH001", "TCH002", "S608"]  # response models need to have specific formatting.
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
